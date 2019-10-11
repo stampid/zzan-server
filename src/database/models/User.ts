@@ -4,8 +4,12 @@ import {
   Column,
   PrimaryKey,
   AutoIncrement,
-  Unique
+  Unique,
+  BeforeCreate
 } from "sequelize-typescript";
+import bcrypt from "bcryptjs";
+import env from "../../lib/env";
+import { doesNotReject } from "assert";
 
 @Table
 export class User extends Model<User> {
@@ -35,4 +39,12 @@ export class User extends Model<User> {
   @Column persona!: string;
 
   @Column introduce: string;
+
+  @BeforeCreate
+  static async passwordHash(instance: User) {
+    const salt = await bcrypt.genSalt(10);
+    const hash = await bcrypt.hash(instance.passWord, salt);
+
+    instance.passWord = hash;
+  }
 }
