@@ -5,11 +5,9 @@ import {
   PrimaryKey,
   AutoIncrement,
   Unique,
-  BeforeCreate
+  BeforeCreate,
+  BeforeFind
 } from "sequelize-typescript";
-import bcrypt from "bcryptjs";
-import env from "../../lib/env";
-import { doesNotReject } from "assert";
 
 @Table
 export class User extends Model<User> {
@@ -40,11 +38,18 @@ export class User extends Model<User> {
 
   @Column introduce: string;
 
-  @BeforeCreate
-  static async passwordHash(instance: User) {
-    const salt = await bcrypt.genSalt(10);
-    const hash = await bcrypt.hash(instance.passWord, salt);
+  // @BeforeCreate
+  // static passwordHash(instance: User) {
+  //   const hash = bcrypt.hashSync(instance.passWord);
 
-    instance.passWord = hash;
-  }
+  //   instance.passWord = hash;
+  // }
+
+  // @BeforeFind
+  // static async findHash(instance: any) {
+  //   console.log(instance);
+  //   const {
+  //     where: { passWord }
+  //   } = instance;
+  // }
 }
